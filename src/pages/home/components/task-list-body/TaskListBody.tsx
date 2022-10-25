@@ -6,11 +6,8 @@ import TaskListCells from '../task-list-cells/TaskListCells'
 import { Button, Checkbox } from '@mui/material'
 
 function TaskListBody(): any {
-	const data: Array<Task> = taskData.map((value) => value)
-	const [dataBase, setDataBase] = useState(data)
-
-	dataBase.forEach((value) => {
-		return (
+	return (
+		taskData.map((value) => (
 			<TaskListRows>
 				<TaskListCells>
 					<Checkbox />
@@ -44,8 +41,7 @@ function TaskListBody(): any {
 					</div>
 				</TaskListCells>
 			</TaskListRows>
-		)
-	})
+	)))
 }
 
 export default TaskListBody
