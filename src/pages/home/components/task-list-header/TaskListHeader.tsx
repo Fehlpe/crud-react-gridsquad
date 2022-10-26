@@ -1,8 +1,33 @@
 import TaskListRows from '../task-list-rows/TaskListRows'
 import TaskListCells from '../task-list-cells/TaskListCells'
 import { Button, TextField } from '@mui/material'
+import { useEffect, useState } from 'react'
+import ReturnUserData from '../../../../utils/ReturnUserData'
+import User from '../../../../config/data/interfaces/user/user'
+import Task from '../../../../config/data/interfaces/task/task'
+import updateUserData from '../../../../utils/UpdateUserData'
 
 function TaskListHeader(): JSX.Element {
+	const [loggedUser, setLoggedUser] = useState<User | null>()
+	const [title, setTitle] = useState("");
+	const [description, setDescription] = useState("");
+
+	useEffect(() => {
+		setLoggedUser(ReturnUserData())
+	}, [])
+
+	function saveTask():void {
+		const newTask: Task = {
+			title: title,
+			description,
+			id: Math.floor(Math.random() * Date.now()),
+			status: false
+		}
+
+		loggedUser?.notes.push(newTask)
+		updateUserData(loggedUser!);
+	}
+
 	return (
 		<TaskListRows>
 			<TaskListCells>
@@ -14,6 +39,7 @@ function TaskListHeader(): JSX.Element {
 					label='Tarefa'
 					variant='standard'
 					fullWidth={true}
+					onChange={(e) => setTitle(e.target.value)}
 				/>
 			</TaskListCells>
 			<TaskListCells>
@@ -22,14 +48,12 @@ function TaskListHeader(): JSX.Element {
 					label='Descrição'
 					variant='standard'
 					fullWidth={true}
+					onChange={(e) => setDescription(e.target.value)}
 				/>
 			</TaskListCells>
 			<TaskListCells>
 				<div className='task-list-actions'>
-					<Button variant='outlined' fullWidth={true}>
-						Cancelar
-					</Button>
-					<Button variant='contained' fullWidth={true}>
+					<Button onClick={saveTask} variant='contained' fullWidth={true}>
 						Salvar
 					</Button>
 				</div>

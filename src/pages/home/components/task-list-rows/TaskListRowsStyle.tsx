@@ -7,7 +7,7 @@ const TaskListRowsStyle = styled.div`
 	display: grid;
 	grid-column-gap: 32px;
 	grid-template-columns: 64px repeat(3, 1fr);
-	padding: 32px;
+	padding: 12px;
 `
 
 export default TaskListRowsStyle

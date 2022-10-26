@@ -1,9 +1,13 @@
 import { Typography } from '@mui/material'
 
-function Welcome(): JSX.Element {
+interface UserNameProp{
+	userName: string;
+}
+
+function Welcome(prop: UserNameProp): JSX.Element {
 	return (
 		<Typography variant='h4' sx={{ mt: '128px' }}>
-			Bem-vindo, <span>Usuário</span>
+			Bem-vindo, <span>{prop.userName}</span> !
 		</Typography>
 	)
 }
