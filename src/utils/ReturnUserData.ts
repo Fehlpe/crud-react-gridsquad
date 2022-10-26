@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import User from "../config/data/interfaces/user/user";
 import searchStorage from "./SearchStorage";
 

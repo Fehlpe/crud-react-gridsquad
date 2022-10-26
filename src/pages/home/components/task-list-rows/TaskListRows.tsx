@@ -5,7 +5,7 @@ interface TaskListRowsProps {
 }
 
 function TaskListRows(props: TaskListRowsProps): JSX.Element {
-	return <TaskListRowsStyle>{props.children}</TaskListRowsStyle>
+	return <TaskListRowsStyle >{props.children}</TaskListRowsStyle>
 }
 
 export default TaskListRows

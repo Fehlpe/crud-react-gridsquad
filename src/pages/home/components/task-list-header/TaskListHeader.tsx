@@ -20,11 +20,10 @@ function TaskListHeader(): JSX.Element {
 		const newTask: Task = {
 			title: title,
 			description,
-			id: Math.floor(Math.random() * Date.now()),
+			id: Math.floor(Math.random() * Date.now()).toString(),
 			status: false
-		}
-
-		loggedUser?.notes.push(newTask)
+		};
+		loggedUser?.notes.push(newTask);
 		updateUserData(loggedUser!);
 	}
 
