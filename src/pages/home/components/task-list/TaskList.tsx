@@ -11,13 +11,21 @@ import Task from '../../../../config/data/interfaces/task/task'
 
 function TaskList(): JSX.Element {
 	const [loggedUser, setLoggedUser] = useState<User | null>()
+	const [notes, setNotes] = useState<Task[]>()
+
 	useEffect(() => {
 		setLoggedUser(ReturnUserData())
 	}, []);
+	useEffect(() => {
+		setNotes(loggedUser?.notes)
+	}, [loggedUser])
+
 	const [title, setTitle] = useState("");
 	const [description, setDescription] = useState("");
+	const [teste, setTeste] = useState(0)
 
 	function saveTask():void {
+
 		const newTask: Task = {
 			title: title,
 			description,
@@ -26,11 +34,8 @@ function TaskList(): JSX.Element {
 		};
 		loggedUser?.notes.push(newTask);
 		updateUserData(loggedUser!);
+		setNotes(loggedUser?.notes)
 	}
-
-	useEffect(() => {
-		console.log("fff")
-	}, [loggedUser])
 
 	return (
 		<TaskListStyle>
@@ -58,13 +63,17 @@ function TaskList(): JSX.Element {
 				</TaskListCells>
 				<TaskListCells>
 					<div className='task-list-actions'>
-						<Button onClick={saveTask} variant='contained' fullWidth={true}>
+						<Button onClick={(e) => {
+							e.preventDefault()
+							setTeste(teste + 1)
+							saveTask()
+						}} variant='contained' fullWidth={true}>
 							Salvar
 						</Button>
 					</div>
 				</TaskListCells>
 			</TaskListRows>
-			{loggedUser?.notes.map((value) => (
+			{notes?.map((value) => (
 				<TaskListRows key={value.id}>
 					<TaskListCells>	
 						<Checkbox />
