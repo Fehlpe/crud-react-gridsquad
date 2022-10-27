@@ -1,5 +1,5 @@
 import TaskListStyle from './TaskListStyle'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import ReturnUserData from '../../../../utils/ReturnUserData'
 import User from '../../../../config/data/interfaces/user/user'
 import TaskListRows from '../task-list-rows/TaskListRows'
@@ -22,7 +22,9 @@ function TaskList(): JSX.Element {
 
 	const [title, setTitle] = useState("");
 	const [description, setDescription] = useState("");
-	const [teste, setTeste] = useState(0)
+	const [reset, setReset] = useState(0)
+	const titleRef = useRef()
+	const descriptionRef = useRef()
 
 	function saveTask():void {
 
@@ -34,7 +36,7 @@ function TaskList(): JSX.Element {
 		};
 		loggedUser?.notes.push(newTask);
 		updateUserData(loggedUser!);
-		setNotes(loggedUser?.notes)
+		setNotes(loggedUser?.notes);
 	}
 
 	return (
@@ -50,6 +52,7 @@ function TaskList(): JSX.Element {
 						variant='standard'
 						fullWidth={true}
 						onChange={(e) => setTitle(e.target.value)}
+						inputRef={titleRef}
 					/>
 				</TaskListCells>
 				<TaskListCells>
@@ -59,14 +62,20 @@ function TaskList(): JSX.Element {
 						variant='standard'
 						fullWidth={true}
 						onChange={(e) => setDescription(e.target.value)}
+						inputRef={descriptionRef}
 					/>
 				</TaskListCells>
 				<TaskListCells>
 					<div className='task-list-actions'>
 						<Button onClick={(e) => {
-							e.preventDefault()
-							setTeste(teste + 1)
-							saveTask()
+							
+							e.preventDefault();
+							setReset(reset + 1);
+							saveTask();
+							// @ts-ignore
+							titleRef.current.value = "";
+							// @ts-ignore
+							descriptionRef.current.value = ""
 						}} variant='contained' fullWidth={true}>
 							Salvar
 						</Button>
