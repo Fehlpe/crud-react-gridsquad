@@ -7,6 +7,7 @@ import TaskListCells from "../task-list-cells/TaskListCells";
 import { Button, Checkbox, TextField } from "@mui/material";
 import updateUserData from "../../../../utils/UpdateUserData";
 import Task from "../../../../config/data/interfaces/task/task";
+import { lookup } from "dns";
 
 function TaskList(): JSX.Element {
   const [loggedUser, setLoggedUser] = useState<User | null>();
@@ -35,6 +36,15 @@ function TaskList(): JSX.Element {
     loggedUser?.notes.push(newTask);
     updateUserData(loggedUser!);
     setNotes(loggedUser?.notes);
+  }
+
+  function deleteTask(id:string):void{
+    const specificTask = notes?.findIndex((task) => task.id === id);
+    if(window.confirm("Deseja deletar esse recado?")){
+      loggedUser?.notes.splice(specificTask!, 1)
+      updateUserData(loggedUser!)
+      setNotes(loggedUser?.notes)
+    }
   }
 
   return (
@@ -84,15 +94,43 @@ function TaskList(): JSX.Element {
         </TaskListCells>
       </TaskListRows>
       {notes?.map((value) => (
-        <TaskListRows key={value.id}>
+        <TaskListRows id={value.id} key={value.id}>
           <TaskListCells>
             <Checkbox />
           </TaskListCells>
           <TaskListCells>
-            <p className="task-list-title">{value.title}</p>
+            <TextField
+              id="standard-basic"
+              label="Tarefa"
+              variant="standard"
+              fullWidth={true}
+              className="task-list-title"
+              value={value.title}
+              InputProps={{disableUnderline: true}}
+              disabled={true}
+              sx={{
+                "& .MuiInputBase-input.Mui-disabled": {
+                  WebkitTextFillColor: "black",
+                },
+              }}
+            />
           </TaskListCells>
           <TaskListCells>
-            <p className="task-list-description">{value.description}</p>
+            <TextField
+                id="standard-basic"
+                label="Tarefa"
+                variant="standard"
+                fullWidth={true}
+                className="task-list-description"
+                value={value.description}
+                InputProps={{disableUnderline: true}}
+                disabled={true}
+                sx={{
+                  "& .MuiInputBase-input.Mui-disabled": {
+                    WebkitTextFillColor: "black",
+                  },
+                }}
+              />
           </TaskListCells>
           <TaskListCells>
             <div className="task-list-actions">
@@ -108,8 +146,10 @@ function TaskList(): JSX.Element {
               <Button
                 variant="contained"
                 fullWidth={true}
-                onClick={() => {
-                  alert("Você clicou no botão de exclusão!");
+                onClick={(e) => {
+                  e.preventDefault()
+                  deleteTask(value.id)
+                  setReset(reset + 1)
                 }}
               >
                 Excluir
