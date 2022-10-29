@@ -4,10 +4,9 @@ import ReturnUserData from "../../../../utils/ReturnUserData";
 import User from "../../../../config/data/interfaces/user/user";
 import TaskListRows from "../task-list-rows/TaskListRows";
 import TaskListCells from "../task-list-cells/TaskListCells";
-import { Button, Checkbox, TextField } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 import updateUserData from "../../../../utils/UpdateUserData";
 import Task from "../../../../config/data/interfaces/task/task";
-import { lookup } from "dns";
 
 function TaskList(): JSX.Element {
   const [loggedUser, setLoggedUser] = useState<User | null>();
@@ -31,28 +30,55 @@ function TaskList(): JSX.Element {
       title: title,
       description,
       id: Math.floor(Math.random() * Date.now()).toString(),
-      status: false,
     };
     loggedUser?.notes.push(newTask);
     updateUserData(loggedUser!);
     setNotes(loggedUser?.notes);
   }
 
-  function deleteTask(id:string):void{
+  function editTask(id: string) {
+    const inputTitle = document.getElementById(id + "1");
+    const inputDescription = document.getElementById(id + "2");
+    const editButton = document.getElementById(id + "3");
+    if (editButton!.innerText === "EDITAR") {
+      editButton!.innerText = "SALVAR";
+      inputTitle?.removeAttribute("readonly");
+      inputTitle?.classList.remove("MuiInputBase-readOnly");
+      inputDescription?.removeAttribute("readonly");
+      inputDescription?.classList.remove("MuiInputBase-readOnly");
+      inputTitle?.focus();
+    } else {
+      const specificTask = notes?.findIndex((task) => task.id === id);
+      editButton!.innerText = "EDITAR";
+      inputDescription?.setAttribute("readonly", "readonly");
+      inputDescription?.classList.add("MuiInputBase-readOnly");
+      inputTitle?.setAttribute("readonly", "readonly");
+      inputTitle?.classList.add("MuiInputBase-readOnly");
+      //@ts-ignore
+      const newTitle = inputTitle.value;
+      //@ts-ignore
+      loggedUser.notes[specificTask].title = newTitle;
+      //@ts-ignore
+      const newDescription = inputDescription.value;
+      //@ts-ignore
+      loggedUser.notes[specificTask].description = newDescription;
+      updateUserData(loggedUser!);
+      setNotes(loggedUser?.notes);
+    }
+  }
+
+  function deleteTask(id: string): void {
     const specificTask = notes?.findIndex((task) => task.id === id);
-    if(window.confirm("Deseja deletar esse recado?")){
-      loggedUser?.notes.splice(specificTask!, 1)
-      updateUserData(loggedUser!)
-      setNotes(loggedUser?.notes)
+    if (window.confirm("Deseja deletar esse recado?")) {
+      loggedUser?.notes.splice(specificTask!, 1);
+      updateUserData(loggedUser!);
+      setNotes(loggedUser?.notes);
     }
   }
 
   return (
     <TaskListStyle>
       <TaskListRows>
-        <TaskListCells>
-          <p className="task-list-head">Status</p>
-        </TaskListCells>
         <TaskListCells>
           <TextField
             id="standard-basic"
@@ -74,7 +100,7 @@ function TaskList(): JSX.Element {
           />
         </TaskListCells>
         <TaskListCells>
-          <div className="task-list-actions">
+          <div className="task-list-actions-header">
             <Button
               onClick={(e) => {
                 e.preventDefault();
@@ -96,49 +122,40 @@ function TaskList(): JSX.Element {
       {notes?.map((value) => (
         <TaskListRows id={value.id} key={value.id}>
           <TaskListCells>
-            <Checkbox />
-          </TaskListCells>
-          <TaskListCells>
             <TextField
-              id="standard-basic"
+              id={value.id + "1"}
               label="Tarefa"
               variant="standard"
               fullWidth={true}
               className="task-list-title"
-              value={value.title}
-              InputProps={{disableUnderline: true}}
-              disabled={true}
-              sx={{
-                "& .MuiInputBase-input.Mui-disabled": {
-                  WebkitTextFillColor: "black",
-                },
+              defaultValue={value.title}
+              InputProps={{
+                readOnly: true,
               }}
             />
           </TaskListCells>
           <TaskListCells>
             <TextField
-                id="standard-basic"
-                label="Tarefa"
-                variant="standard"
-                fullWidth={true}
-                className="task-list-description"
-                value={value.description}
-                InputProps={{disableUnderline: true}}
-                disabled={true}
-                sx={{
-                  "& .MuiInputBase-input.Mui-disabled": {
-                    WebkitTextFillColor: "black",
-                  },
-                }}
-              />
+              id={value.id + "2"}
+              label="Tarefa"
+              variant="standard"
+              fullWidth={true}
+              className="task-list-description"
+              defaultValue={value.description}
+              InputProps={{
+                readOnly: true,
+              }}
+            />
           </TaskListCells>
           <TaskListCells>
             <div className="task-list-actions">
               <Button
+                id={value.id + "3"}
                 variant="outlined"
                 fullWidth={true}
-                onClick={() => {
-                  alert("Você clicou no botão de edição!");
+                onClick={(e) => {
+                  e.preventDefault();
+                  editTask(value.id);
                 }}
               >
                 Editar
@@ -147,9 +164,9 @@ function TaskList(): JSX.Element {
                 variant="contained"
                 fullWidth={true}
                 onClick={(e) => {
-                  e.preventDefault()
-                  deleteTask(value.id)
-                  setReset(reset + 1)
+                  e.preventDefault();
+                  deleteTask(value.id);
+                  setReset(reset + 1);
                 }}
               >
                 Excluir

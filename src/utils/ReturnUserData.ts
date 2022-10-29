@@ -7,5 +7,8 @@ export default function ReturnUserData(){
     const loggedUser = userList.find(
         (valor:User) => valor.email === logged
     )
-    return loggedUser
+    if(loggedUser){
+        return loggedUser
+    } 
+    return null
 }

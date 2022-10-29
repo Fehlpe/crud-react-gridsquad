@@ -28,6 +28,12 @@ const TaskListStyle = styled.div`
 		justify-items: center;
 	}
 
+	.task-list-actions-header {
+		display: flex;
+		align-items: center;
+		justify-items: center;
+	}
+
 	@media (max-width: 1075px) {
 		.task-list-actions {
 			grid-template-rows: 1fr 1fr;

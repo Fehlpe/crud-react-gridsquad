@@ -1,29 +1,29 @@
-import { AppBar, Toolbar, Typography } from '@mui/material'
-import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded'
-import { Link as RouterLink } from 'react-router-dom'
+import { AppBar, Button, Toolbar, Typography } from '@mui/material'
+import { useNavigate } from 'react-router-dom'
 
 function Header(): JSX.Element {
+	const navigate = useNavigate();
+	const navigateLogin = () => {
+		navigate('/')
+	}
+
+	function logoutUser(){	
+		sessionStorage.removeItem("logged");
+		navigateLogin()
+	}
+
 	return (
-		<AppBar position='fixed'>
-			<Toolbar>
-				<Typography variant='h4'>TaskList</Typography>
-				<RouterLink
-					to={'/'}
-					style={{
-						color: 'inherit',
-						position: 'absolute',
-						right: '16px',
-						marginTop: '4px'
-					}}
-				>
-					<LogoutRoundedIcon
-						sx={{
-							fontSize: '32px'
-						}}
-					/>
-				</RouterLink>
-			</Toolbar>
-		</AppBar>
+		<AppBar position="fixed">
+        <Toolbar>
+          <Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>
+            TaskList
+          </Typography>
+          <Button onClick={(e) => {
+			e.preventDefault()
+			logoutUser();
+		  }} color="inherit">Logout</Button>
+        </Toolbar>
+      </AppBar>
 	)
 }
 
